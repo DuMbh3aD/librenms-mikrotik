@@ -235,14 +235,14 @@ Route::middleware(['web', 'auth'])->get('/plugin/MikroTik/topology', function (R
         }
     }
 
-    // VMNETRA_DEVICE_STATUS_V1
+    // MikroTik_DEVICE_STATUS_V1
     // Attach current LibreNMS status to topology devices.
     $deviceStatuses = DB::table('devices')
         ->select('device_id', 'status', 'disabled', 'ignore', 'uptime')
         ->get()
         ->keyBy('device_id');
 
-    // VMNETRA_ACTIVE_ALERTS_V1
+    // MikroTik_ACTIVE_ALERTS_V1
     $activeAlertCounts = DB::table('alerts')
         ->where('state', 1)
         ->select('device_id')
@@ -250,7 +250,7 @@ Route::middleware(['web', 'auth'])->get('/plugin/MikroTik/topology', function (R
         ->groupBy('device_id')
         ->pluck('total', 'device_id');
 
-    // VMNETRA_DEVICE_METRICS_V1
+    // MikroTik_DEVICE_METRICS_V1
     // Latest polled CPU, memory and uptime values.
     $cpuMetrics = DB::table('processors')
         ->select('device_id')

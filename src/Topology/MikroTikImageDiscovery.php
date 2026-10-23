@@ -14,12 +14,17 @@ class MikroTikImageDiscovery
             ! is_array($parts) ||
             ($parts['scheme'] ?? '') !== 'https' ||
             ($parts['host'] ?? '') !== 'mikrotik.com' ||
-            ! str_starts_with($parts['path'] ?? '', '/product/')
+            isset($parts['port']) ||
+            isset($parts['user']) ||
+            isset($parts['pass']) ||
+            isset($parts['query']) ||
+            isset($parts['fragment']) ||
+            ! preg_match('~^/product/[a-zA-Z0-9_-]+/?$~', $parts['path'] ?? '')
         ) {
             throw new \InvalidArgumentException('Invalid MikroTik product URL');
         }
 
-        $response = Http::timeout(20)->get($productUrl);
+        $response = Http::withoutRedirecting()->timeout(20)->get($productUrl);
 
         if (! $response->successful()) {
             throw new \RuntimeException('MikroTik product page unavailable');

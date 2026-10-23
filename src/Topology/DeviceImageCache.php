@@ -4,7 +4,16 @@ namespace LibreNMS\Plugins\MikroTik\Topology;
 
 class DeviceImageCache
 {
-    private const DIRECTORY = '/opt/mikrotik-librenms-plugin/storage/images';
+    private function directory(): string
+    {
+        $directory = storage_path('app/mikrotik/images');
+
+        if (! is_dir($directory) && ! mkdir($directory, 0755, true) && ! is_dir($directory)) {
+            throw new \RuntimeException('Cannot create MikroTik image cache directory');
+        }
+
+        return $directory;
+    }
 
     public function filename(string $url): string
     {
@@ -13,7 +22,7 @@ class DeviceImageCache
 
     public function path(string $url): string
     {
-        return self::DIRECTORY . '/' . $this->filename($url);
+        return $this->directory() . '/' . $this->filename($url);
     }
 
     public function cache(string $url): ?string
@@ -92,7 +101,7 @@ class DeviceImageCache
             $sourceWidth, $sourceHeight
         );
 
-        $temporary = tempnam(self::DIRECTORY, 'img_');
+        $temporary = tempnam($this->directory(), 'img_');
 
         if ($temporary === false) {
             return null;

@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    // VMNETRA_STATUS_BORDERS_V3
+    // MikroTik_STATUS_BORDERS_V3
     const liveDeviceStatuses = new Map(
         devices.map(d => [Number(d.device_id), {
             status: d.status,
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // VMNETRA_LIVE_REFRESH_V1
+    // MikroTik_LIVE_REFRESH_V1
     // Update existing ports and links without rebuilding the network.
     let topologyRefreshTimer = null;
 
@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Object.assign(portStates, data.portStates || {});
 
 
-                // VMNETRA_LIVE_DISCOVERY_V1
+                // MikroTik_LIVE_DISCOVERY_V1
                 // Add newly discovered devices without moving existing nodes.
                 const knownDevices = new Set(
                     devices.map(d => Number(d.device_id))
@@ -591,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     devices.push(device);
                     knownDevices.add(id);
-                    console.info('VMNETRA: New device:', device.sysName || id);
+                    console.info('MikroTik: New device:', device.sysName || id);
                 });
 
                 // Keep SVG metadata current for newly discovered ports.
@@ -615,7 +615,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         connection.local_device_id + ':' +
                         connection.local_interface;
 
-                    // VMNETRA_VIRTUAL_LIVE_V1
+                    // MikroTik_VIRTUAL_LIVE_V1
                     if (groupsByPort.has(localKey) &&
                         virtualNodes.some(n => n.id === 'virtual:' + localKey)) {
                         const virtualId = 'virtual:' + localKey;
@@ -647,7 +647,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 smooth: false
                             });
 
-                            console.info('VMNETRA: New virtual-switch downlink:', downlinkId);
+                            console.info('MikroTik: New virtual-switch downlink:', downlinkId);
                         }
 
                         return;
@@ -687,11 +687,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         edges.add(edge);
                     }
 
-                    console.info('VMNETRA: New LLDP link:', connection.id);
+                    console.info('MikroTik: New LLDP link:', connection.id);
                 });
 
 
-                // VMNETRA_AUTO_VIRTUAL_CREATE_V1
+                // MikroTik_AUTO_VIRTUAL_CREATE_V1
                 // Detect new unmanaged switches using the original LLDP rules.
                 const liveCandidates = [...groupsByPort.entries()]
                     .filter(([key, links]) =>
@@ -832,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
 
                     console.info(
-                        'VMNETRA: Auto-created virtual switch:',
+                        'MikroTik: Auto-created virtual switch:',
                         virtualId, label
                     );
                 });
@@ -905,7 +905,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 network.redraw();
             }
         } catch (error) {
-            console.warn('VMNETRA topology refresh:', error);
+            console.warn('MikroTik topology refresh:', error);
         } finally {
             topologyRefreshTimer = window.setTimeout(
                 refreshTopologyLive,
@@ -927,7 +927,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // VMNETRA_PORT_PULSE
+    // MikroTik_PORT_PULSE
     // Animated indicators for active physical interfaces.
     let portPulsePhase = 0;
 
@@ -989,7 +989,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('pagehide', () => clearInterval(portPulseTimer));
 
 
-    // VMNETRA_LINK_DELETE_CLICK
+    // MikroTik_LINK_DELETE_CLICK
     // Detect clicks on custom Canvas links and standard vis-network edges.
     network.on('click', async function (params) {
         if (!groupId || params.nodes.length) return;
@@ -1208,7 +1208,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    // VMNETRA_PORT_CLICK_INFO
+    // MikroTik_PORT_CLICK_INFO
     // Use the existing physical-port coordinates without changing SVG models.
     network.on('click', function (params) {
         if (!groupId || !params.pointer?.canvas) return;
@@ -1306,7 +1306,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    // VMNETRA_DEVICE_INFO_V1
+    // MikroTik_DEVICE_INFO_V1
     // Open device details only when the click is not on a physical port.
     network.on('click', function (params) {
         if (!groupId || params.nodes.length !== 1 || !params.pointer?.canvas) return;
